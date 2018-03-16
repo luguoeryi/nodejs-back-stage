@@ -55,4 +55,11 @@ app.use('/api', require('./routers/api'));
 app.use('/', require('./routers/main'));
 
 // 监听http听清
-app.listen(9091);
+mongoose.connect('mongodb://localhost:27018/blog', function (err) {
+    if (err) {
+        console.log('数据路连接失败');
+    } else {
+        console.log('数据路连接成功');
+        app.listen(9091);
+    }
+});
