@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
     * @param telFile 模板的文件，相对于views目录
     * @param data 传递给模板使用的数据
     */
-    res.render('index');
+    res.render('main/index');
 });
 
 module.exports = router;

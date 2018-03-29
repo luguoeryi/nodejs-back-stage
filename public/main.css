@@ -1,3 +1,9 @@
-body {
-    background: pink;
+.section-block {
+    margin-top: 15px;
+    background: #e0e0e0;
+}
+
+.form-wrap .input-group {
+    margin-bottom: 18px;
+    padding-top: 18px;
 }
