@@ -12,7 +12,7 @@ let mongoose = require('mongoose');
  */ 
 module.exports = new mongoose.Schema({
     // 用户名
-    username: String,
+    userName: String,
     // 密码
-    password: String
+    passWord: String
 });

@@ -3,7 +3,15 @@
     background: #e0e0e0;
 }
 
-.form-wrap .input-group {
+.section-block .input-group {
     margin-bottom: 18px;
     padding-top: 18px;
+}
+
+.section-block .info-status {
+    color: red;
+}
+
+.hide-box {
+    display: none;
 }

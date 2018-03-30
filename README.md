@@ -10,4 +10,4 @@ routers -- 路由文件
 
 views -- 视图文件
 
-module -- 模型文件
+models -- 模型文件
