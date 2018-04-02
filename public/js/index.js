@@ -9,6 +9,12 @@ $(window).ready(function () {
         $(oFormLogin).show();
         $(oFormReg).hide();
     });
+    $('#showRegBtn').on('click', function () {
+        var oFormLogin = $('.form-wrap-login')[0];
+        var oFormReg = $('.form-wrap')[0];
+        $(oFormLogin).hide();
+        $(oFormReg).show();
+    });
 });
 
 // 注册
@@ -46,6 +52,7 @@ function login () {
     var aLoginBtn = $('#btn-login');
     var oFormLogin = $('.form-wrap-login')[0];
     var oInfoStatus = $('.form-wrap-login .info-status')[0];
+    var loginUser = $('.login-user-info')[0];
     $(aLoginBtn).on('click', function () {
         $.ajax({
             type: 'post',
@@ -57,7 +64,10 @@ function login () {
             dataType: 'json',
             success: function (result) {
                 if (result.status == 200) {
-                    alert('登录成功');
+                    $(oFormLogin).hide();
+                    $(loginUser).show();
+
+                    // $(aLoginBtn).find('.user-name')[0].html();
                 } else {
                     $(oInfoStatus).text(result.message);
                 }

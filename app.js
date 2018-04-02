@@ -65,9 +65,7 @@ mongoose.connect('mongodb://localhost:27018/blog', function (err) {
     if (err) {
         console.log('数据路连接失败');
     } else {
-        console.log('数据路连接成功');
-
-        
+        console.log('数据路连接成功');        
         app.listen(9091);
     }
 });

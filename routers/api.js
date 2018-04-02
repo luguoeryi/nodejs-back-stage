@@ -114,6 +114,10 @@ router.post('/user/login', function (req, res, next) {
         if (userInfo) { // 表示数据库中有该记录
             resData.status = 200;
             resData.message = '登录成功！';
+            resData.response.userInfo = {
+                _id: userInfo._id,
+                userName: userInfo.userName
+            }
             return res.json(resData);
         } else {
             resData.status = 201;
