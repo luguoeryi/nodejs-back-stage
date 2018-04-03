@@ -15,6 +15,9 @@ let mongoose = require('mongoose');
 // 加载body-parser, 用来处理post提交过来的数据
 let bodyParser = require('body-parser');
 
+// 加载cookies模块
+let Cookies = require('cookies');
+
 // 创建app应用
 let app = express();
 
@@ -52,6 +55,15 @@ swig.setDefaults({cache: false});
 
 // bodyParser 设置
 app.use(bodyParser.urlencoded({extended: true}));
+
+// 设置cookie
+app.use(function (req, res, next) {
+    req.cookies = new Cookies(req, res);
+
+    console.log(req.cookies.get('userInfo'));
+
+    next();
+});
 
 /**
 * 根据不同功能划分模块

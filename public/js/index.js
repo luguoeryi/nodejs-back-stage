@@ -67,9 +67,14 @@ function login () {
                     $(oFormLogin).hide();
                     $(loginUser).show();
 
-                    // $(aLoginBtn).find('.user-name')[0].html();
+                    var userInfo = result.response.userInfo;
+
+                    $(loginUser).find('.user-name').text(userInfo.userName);
+                    $(loginUser).find('.user-info').text('你好，欢迎光临我的博客！');
                 } else {
+
                     $(oInfoStatus).text(result.message);
+
                 }
             }
         });

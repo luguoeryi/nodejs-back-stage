@@ -118,6 +118,10 @@ router.post('/user/login', function (req, res, next) {
                 _id: userInfo._id,
                 userName: userInfo.userName
             }
+            req.cookies.set('userInfo', JSON.stringify({
+                _id: userInfo._id,
+                userName: userInfo.userName
+            }));
             return res.json(resData);
         } else {
             resData.status = 201;
