@@ -131,4 +131,9 @@ router.post('/user/login', function (req, res, next) {
     })
 });
 
+router.get('/user/logout', function (req, res) {
+    req.cookies.set('userInfo', null);
+    return res.json(resData);
+});
+
 module.exports = router;

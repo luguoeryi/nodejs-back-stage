@@ -2,6 +2,7 @@
 $(window).ready(function () {
     reg();
     login();
+    logout();
 
     $('#showLoginBtn').on('click', function () {
         var oFormLogin = $('.form-wrap-login')[0];
@@ -47,7 +48,7 @@ function reg () {
     });
 }
 
-// login
+// 登录
 function login () {
     var aLoginBtn = $('#btn-login');
     var oFormLogin = $('.form-wrap-login')[0];
@@ -64,13 +65,9 @@ function login () {
             dataType: 'json',
             success: function (result) {
                 if (result.status == 200) {
-                    $(oFormLogin).hide();
-                    $(loginUser).show();
 
-                    var userInfo = result.response.userInfo;
-
-                    $(loginUser).find('.user-name').text(userInfo.userName);
-                    $(loginUser).find('.user-info').text('你好，欢迎光临我的博客！');
+                    window.location.reload();
+                    
                 } else {
 
                     $(oInfoStatus).text(result.message);
@@ -79,4 +76,19 @@ function login () {
             }
         });
     }); 
+}
+
+// 退出
+function logout () {
+    var aLogout = $('#logout');
+    $(aLogout).on('click', function () {
+        $.ajax({
+            url: '/api/user/logout',
+            success: function (result) {
+                if (result.status == 200) {
+                    window.location.reload();
+                }
+            }
+        });
+    });
 }
