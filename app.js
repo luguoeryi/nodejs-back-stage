@@ -63,12 +63,12 @@ app.use(function (req, res, next) {
     req.cookies = new Cookies(req, res);
 
     // 解析用户登录的cookie信息
-    req.userInfo = {};
     let cookiesInfo = req.cookies.get('userInfo');
     if (cookiesInfo) {
         try {
-            req.userInfo = JSON.parse(cookiesInfo);
+            req.userInfo = JSON.parse(cookiesInfo) || {};
             User.findById(req.userInfo._id).then(userInfo => {
+                userInfo = userInfo || {};
                 req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
                 next();
             });

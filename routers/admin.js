@@ -6,7 +6,8 @@ let router = express.Router();
 let User = require('../models/User');
 
 router.use(function (req, res, next) {
-    if (!req.userInfo.isAdmin) {
+    let userInfo = req.userInfo || {};
+    if (!userInfo.isAdmin) {
         res.send('对不起，您不是管理员，无权限访问该页面');
         return;
     }

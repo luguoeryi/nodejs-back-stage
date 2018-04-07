@@ -80,8 +80,7 @@ function login () {
 
 // 退出
 function logout () {
-    var aLogout = $('#logout');
-    $(aLogout).on('click', function () {
+    $('#logout,#adminLogout').on('click', function () {
         $.ajax({
             url: '/api/user/logout',
             success: function (result) {
