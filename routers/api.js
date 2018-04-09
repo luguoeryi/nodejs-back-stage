@@ -77,7 +77,7 @@ router.post('/user/register', function (req, res, next) {
         });
         return user.save();
     }).then(newUserInfo => {
-        console.log(newUserInfo);
+        // console.log(newUserInfo);
         resData.status = 200;
         resData.message = '注册成功！';
         res.json(resData);

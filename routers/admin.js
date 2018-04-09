@@ -4,6 +4,7 @@
 let express = require('express');
 let router = express.Router();
 let User = require('../models/User');
+let Category = require('../models/Category');
 
 router.use(function (req, res, next) {
     let userInfo = req.userInfo || {};
@@ -53,6 +54,65 @@ router.get('/user', function (req, res, next) {
                 pages: pages,
                 page: page
             });
+        });
+    });
+});
+
+/**
+ * 分类管理
+*/
+router.get('/category', function (req, res, next) {
+    res.render('admin/category_index', {
+        userInfo: req.userInfo
+    });
+});
+
+/**
+ * 分类添加
+*/
+router.get('/category/add', function (req, res, next) {
+    res.render('admin/category_add', {
+        userInfo: req.userInfo
+    });
+});
+
+/**
+ * 分类的保存
+*/
+router.post('/category/add', function (req, res, next) {
+    console.log(req.body);
+    let name = req.body.name || '';
+    if (name == '') {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '名称不能为空！'
+        });
+        return;
+    }
+
+    // 数据库中是否已经存在同名分类名称
+
+    Category.findOne({
+        name: name
+    }).then(function (fs) {
+        if (fs) {
+            // 已经存在
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '分类已经存在了！'
+            });
+            return Promise.reject();
+        } else {
+            // 不存在
+            return new Category({ // promise
+                name: name
+            }).save();
+        }
+    }).then(function (newCategory) { // 接受一个promise对象，一条新记录
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '分类保存成功！',
+            url: '/admin/category'
         });
     });
 });
