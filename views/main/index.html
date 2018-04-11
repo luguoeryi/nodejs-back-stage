@@ -29,9 +29,9 @@
                 </div>
                 <div class="col-md-7">
                     <ul class="nav nav-pills pull-right navbar-nav">
-                        <li role="presentation" class="active"><a href="#">Home</a></li>
-                        <li role="presentation"><a href="#">Profile</a></li>
-                        <li role="presentation"><a href="#">Messages</a></li>
+                        {% for item in categories %}
+                            <li role="presentation"><a href="#">{{item.name}}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

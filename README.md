@@ -1,7 +1,7 @@
 # 启动数据库
 
 mongod -dbpath=E:\bigProject\nodejs-back-stage\db --port=27018
-mongod -dbpath=F:\nodejs-back-stage\db --port=27018
+mongod -dbpath=F:\bigProject\nodejs-back-stage\db --port=27018
 
 # 目录结构
 

@@ -44,7 +44,7 @@ router.get('/user', function (req, res, next) {
         
         let skip = (page - 1) * limit;
 
-        User.find().limit(limit).skip(skip).then(function (users) {
+        User.find().sort({_id: -1}).limit(limit).skip(skip).then(function (users) {
             // console.log({users});
             res.render('admin/user_index', {
                 userInfo: req.userInfo,
@@ -77,7 +77,11 @@ router.get('/category', function (req, res, next) {
         
         let skip = (page - 1) * limit;
 
-        Category.find().limit(limit).skip(skip).then(function (categories) {
+        /**
+         * 1 升序
+         * -1 降序
+        */
+        Category.find().sort({_id: -1}).limit(limit).skip(skip).then(function (categories) {
             res.render('admin/category_index', {
                 userInfo: req.userInfo,
                 categories: categories,
@@ -243,6 +247,24 @@ router.get('/category/delete', function (req, res, next) {
             message: '删除成功！',
             url: '/admin/category'
         });
+    });
+});
+
+/**
+ * 用户管理
+*/
+router.get('/content', function (req, res, next) {
+    res.render('admin/content_index', {
+        userInfo: req.userInfo
+    });
+});
+
+/**
+ * 用户添加
+*/
+router.get('/content/add', function (req, res, next) {
+    res.render('admin/content_add', {
+        userInfo: req.userInfo
     });
 });
 

@@ -3,6 +3,7 @@
 */
 let express = require('express');
 let router = express.Router();
+let Category = require('../models/Category');
 
 router.get('/', function (req, res, next) {
     /**
@@ -10,9 +11,13 @@ router.get('/', function (req, res, next) {
     * @param telFile 模板的文件，相对于views目录
     * @param data 传递给模板使用的数据
     */
-    console.log(req.userInfo);
-    res.render('main/index', {
-        userInfo: req.userInfo
+
+    // 读取所有的分类信息
+    Category.find().then(function (categories) {
+        res.render('main/index', {
+            userInfo: req.userInfo,
+            categories: categories || []
+        });
     });
 });
 
