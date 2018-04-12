@@ -5,6 +5,7 @@ let express = require('express');
 let router = express.Router();
 let User = require('../models/User');
 let Category = require('../models/Category');
+let Content = require('../models/Content');
 
 router.use(function (req, res, next) {
     let userInfo = req.userInfo || {};
@@ -251,21 +252,106 @@ router.get('/category/delete', function (req, res, next) {
 });
 
 /**
- * 用户管理
+ * 内容管理
 */
 router.get('/content', function (req, res, next) {
-    res.render('admin/content_index', {
-        userInfo: req.userInfo
+    let page = Number(req.query.page) || 1;
+    let limit = 2;
+    let pages = 0;
+
+    Content.count().then(function (count) {
+        // 计算总页数
+        pages = Math.ceil(count / limit);
+        // 取值不能超过pages
+        page = Math.min(page, pages);
+        // 取值不能小于1
+        page = Math.max(page, 1);
+        
+        let skip = (page - 1) * limit;
+
+        /**
+         * 1 升序
+         * -1 降序
+        */
+        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then(function (contents) {
+            res.render('admin/content_index', {
+                userInfo: req.userInfo,
+                contents: contents,
+                count: count,
+                limit: limit,
+                pages: pages,
+                page: page,
+                changePageUrl: '/admin/content'
+            });
+        });
     });
 });
 
 /**
- * 用户添加
+ * 用户添加页
 */
 router.get('/content/add', function (req, res, next) {
-    res.render('admin/content_add', {
-        userInfo: req.userInfo
+    Category.find().then(function (categories) {
+        res.render('admin/content_add', {
+            userInfo: req.userInfo,
+            categories: categories
+        });
     });
 });
+
+/**
+ * 内容添加
+*/
+router.post('/content/add', function (req, res, next) {
+    let data = req.body
+    console.log(data);
+    let category = data.category;
+    let title = data.title;
+    let description = data.description;
+    let content = data.content;
+
+    if (!category) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '请选择所属分类！'
+        });
+        return;
+    }
+    if (!title) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '请填写文章标题！'
+        });
+        return;
+    }
+    if (!description) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '请填写文章描述！'
+        });
+        return;
+    }
+    if (!content) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '请填写文章内容！'
+        });
+        return;
+    }
+
+    // 保存
+    new Content({
+        category: category,
+        title: title,
+        description: description,
+        content: content
+    }).save().then(function () {
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '文章内容保存成功！'
+        });
+    });
+});
+
 
 module.exports = router;

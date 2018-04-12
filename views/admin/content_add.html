@@ -9,11 +9,10 @@
 
  <form method="post">
     <div class="form-group">
-        <select name="categoey" class="form-control" id="categoey">
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
-            <option value="">4</option>
+        <select name="category" class="form-control" id="categoey">
+            {% for item in categories %}
+                <option value="{{item._id.toString()}}">{{item.name}}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="form-group">
