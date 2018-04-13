@@ -109,7 +109,6 @@ router.get('/category/add', function (req, res, next) {
  * 分类的保存
 */
 router.post('/category/add', function (req, res, next) {
-    console.log(req.body);
     let name = req.body.name || '';
     if (name == '') {
         res.render('admin/error', {
@@ -273,7 +272,7 @@ router.get('/content', function (req, res, next) {
          * 1 升序
          * -1 降序
         */
-        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then(function (contents) {
+        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate(['category', 'user']).then(function (contents) {
             res.render('admin/content_index', {
                 userInfo: req.userInfo,
                 contents: contents,
@@ -304,7 +303,6 @@ router.get('/content/add', function (req, res, next) {
 */
 router.post('/content/add', function (req, res, next) {
     let data = req.body
-    console.log(data);
     let category = data.category;
     let title = data.title;
     let description = data.description;
@@ -341,6 +339,7 @@ router.post('/content/add', function (req, res, next) {
 
     // 保存
     new Content({
+        user: req.userInfo._id.toString(),
         category: category,
         title: title,
         description: description,
@@ -349,6 +348,84 @@ router.post('/content/add', function (req, res, next) {
         res.render('admin/success', {
             userInfo: req.userInfo,
             message: '文章内容保存成功！'
+        });
+    });
+});
+
+/**
+ * 内容添加
+*/
+router.get('/content/edit', function (req, res, next) {
+    let id = req.query.id || '';
+    let categories = [];
+    Category.find().then(function (rs) {
+        categories = rs;
+        return Content.findOne({_id: id});
+    }).then(function (content) {
+        res.render('admin/content_edit', {
+            userInfo: req.userInfo,
+            content: content,
+            categories: categories
+        });
+    });
+});
+
+/**
+ * 内容编辑
+*/
+router.post('/content/edit', function (req, res, next) {
+    let id = req.query.id || '';
+    let category = req.body.category || '';
+    let title = req.body.title || '';
+    let description = req.body.description || '';
+    let content = req.body.content || '';
+
+    if (!title) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '标题不能为空！'
+        });
+        return;
+    }
+    Content.find({
+        _id: id
+    }).then(function (content) {
+        if (!content) {
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '内容不存在！'
+            });
+            return Promise.reject();
+        }
+        return Content.update({
+            _id: id
+        }, {
+            category: category,
+            title: title,
+            description: description,
+            content: content
+        });
+    }).then(function () {
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '修改成功！',
+            url: '/admin/content'
+        });
+    });
+});
+
+/**
+ * 内容删除
+*/
+router.get('/content/delete', function (req, res, next) {
+    let id = req.query.id || '';
+    Content.remove({
+        _id: id
+    }).then(function () {
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '删除成功！',
+            url: '/admin/content'
         });
     });
 });
