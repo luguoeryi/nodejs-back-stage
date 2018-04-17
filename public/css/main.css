@@ -1,0 +1,29 @@
+body {
+    background: #ececec;
+}
+
+.banner {
+    height: 280px;
+    background: url("../img/banner.jpg") no-repeat center;
+}
+
+.article-content {
+    padding-top: 20px;
+}
+
+.nav-style {
+    background: #fff;
+}
+
+.des-content {
+    font-size: 16px;
+}
+
+.caption-footer {
+    margin-top: 15px;
+}
+
+.margin-auto {
+    margin: auto;
+    float: none;
+}
