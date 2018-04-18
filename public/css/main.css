@@ -13,6 +13,16 @@ body {
 
 .nav-style {
     background: #fff;
+    text-align: center;
+    line-height: 0;
+}
+.nav-style .navbar-nav {
+    display: inline-block;
+    float: none;
+}
+
+.item-input {
+    margin-top: 20px;
 }
 
 .des-content {
@@ -23,7 +33,12 @@ body {
     margin-top: 15px;
 }
 
-.margin-auto {
-    margin: auto;
-    float: none;
+.state-box-title span {
+    border-bottom: 2px solid #38B1D5;
+    padding: 4px;
+    padding-left: 0;
+}
+
+.state-box-content h5 {
+    margin-top: 20px;
 }
