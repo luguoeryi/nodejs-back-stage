@@ -2,6 +2,10 @@ body {
     background: #ececec;
 }
 
+.hide-box {
+    display: none;
+}
+
 .banner {
     height: 280px;
     background: url("../img/banner.jpg") no-repeat center;
@@ -41,4 +45,9 @@ body {
 
 .state-box-content h5 {
     margin-top: 20px;
+}
+
+.info-status {
+    color: red;
+    margin-top: 6px;
 }

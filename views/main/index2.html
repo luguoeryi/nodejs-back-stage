@@ -17,6 +17,8 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="../../public/css/main.css" />
+
+    <script src="../../public/js/main.js"></script>
 </head>
 <body>
     <section>
@@ -24,9 +26,10 @@
     </section>
 
     <nav class="collapse navbar-collapse nav-style">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav nav-tabs">
+            <li {% if !data.category %} class="active" {% endif %}><a href="/">首页</a></li>
             {% for item in data.categories %}
-            <li><a href="#">{{item.name}}</a></li>
+            <li {% if data.category == item.id %} class="active" {% endif %}><a href="/?category={{item.id}}">{{item.name}}</a></li>
             {% endfor %}
         </ul>
     </nav>
@@ -50,63 +53,69 @@
             <div class="col-md-4">
                 <div class="thumbnail">
                     <div class="caption">
-                       <!--<div class="state-box">
-                           <div class="state-box-title">
-                               <span>用户登录</span>
-                           </div>
-                           <div class="state-box-content">
-                               <div class="input-group item-input">
-                                    <input type="text" name="username" class="form-control" placeholder="用户名">
+                        {% if data.userInfo._id %}
+                            <div class="state-box">
+                                <div class="state-box-title">
+                                    <span>用户信息</span>
                                 </div>
-
-                                <div class="input-group item-input">
-                                    <input type="password" name="password" class="form-control" placeholder="密码">
+                                <div class="state-box-content">
+                                    <h5>{{data.userInfo.userName}}</h5>
+                                    {% if data.userInfo.isAdmin %}
+                                        <div>你好，管理员！ <a target="_blank" href="/admin">进入管理</a></div><br /> 
+                                    {% else %}
+                                        <div>你好，欢迎光临我的博客！</div><br />
+                                    {% endif %}
+                                    <p><a id="logout" href="javascript:;">退出</a></p>
                                 </div>
-
-                                <label class="info-status"></label>
-
-                                <div class="input-group">
-                                    <button type="button" id="btn-login" class="btn btn-info">登录</button><br /><br />
-                                    <a href="javascript:;" id="showRegBtn">还没账号？ 点击注册</a>
+                            </div>
+                        {% else %}
+                            <div class="state-box form-wrap-login">
+                                <div class="state-box-title">
+                                    <span>用户登录</span>
                                 </div>
-                           </div>
-                       </div>-->
-                       <!--<div class="state-box">
-                           <div class="state-box-title">
-                               <span>用户注册</span>
-                           </div>
-                           <div class="state-box-content">
-                               <div class="input-group item-input">
-                                    <input type="text" name="username" class="form-control" placeholder="用户名">
-                                </div>
+                                <div class="state-box-content">
+                                    <div class="input-group item-input">
+                                        <input type="text" name="username" class="form-control" placeholder="用户名">
+                                    </div>
 
-                                <div class="input-group item-input">
-                                    <input type="password" name="password" class="form-control" placeholder="密码">
-                                </div>
+                                    <div class="input-group item-input">
+                                        <input type="password" name="password" class="form-control" placeholder="密码">
+                                    </div>
 
-                                <div class="input-group item-input">
-                                    <input type="password" name="password" class="form-control" placeholder="确认密码">
-                                </div>
+                                    <label class="info-status"></label>
 
-                                <label class="info-status"></label>
-
-                                <div class="input-group">
-                                    <button type="button" id="btn-login" class="btn btn-info">注册</button><br /><br />
-                                    <a href="javascript:;" id="showRegBtn">已有账号？点击登录</a>
+                                    <div class="input-group">
+                                        <button type="button" id="btn-login" class="btn btn-info">登录</button><br /><br />
+                                        <a href="javascript:;" id="showRegBtn">还没账号？ 点击注册</a>
+                                    </div>
                                 </div>
-                           </div>
-                       </div>-->
-                        <div class="state-box">
-                           <div class="state-box-title">
-                               <span>用户信息</span>
-                           </div>
-                           <div class="state-box-content">
-                               <h5>admin</h5>
-                               <!-- <div>你好，管理员！ <a href="#">进入管理</a></div><br /> -->
-                               <div>你好，欢迎光临我的博客！</div><br />
-                               <p><a href="#">退出</a></p>
-                           </div>
-                       </div> 
+                            </div>
+                            <div class="state-box form-wrap-reg hide-box">
+                                <div class="state-box-title">
+                                    <span>用户注册</span>
+                                </div>
+                                <div class="state-box-content">
+                                    <div class="input-group item-input">
+                                        <input type="text" name="username" class="form-control" placeholder="用户名">
+                                    </div>
+
+                                    <div class="input-group item-input">
+                                        <input type="password" name="password" class="form-control" placeholder="密码">
+                                    </div>
+
+                                    <div class="input-group item-input">
+                                        <input type="password" name="repassword" class="form-control" placeholder="确认密码">
+                                    </div>
+
+                                    <label class="info-status"></label>
+
+                                    <div class="input-group">
+                                        <button type="button" id="btn-reg" class="btn btn-info">注册</button><br /><br />
+                                        <a href="javascript:;" id="showLoginBtn">已有账号？点击登录</a>
+                                    </div>
+                                </div>
+                            </div> 
+                        {% endif %}
                     </div>
                 </div>      
             </div>
@@ -114,10 +123,21 @@
         <div class="row">
             <nav aria-label="...">
                 <ul class="pagination">
-                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+                    <li {% if data.page <= 1 %} class="disabled" {% endif %}>
+                        <a href="/?category={{data.category}}&page={{data.page - 1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% set allPages = [] %}
+                    {% set allPages.length = data.pages %}
+                    {% for item, val in allPages %}
+                        <li {% if loop.index == data.page %} class="active" {%  endif %}><a href="/?category={{data.category}}&page={{loop.index}}">{{loop.index}}</a></li>
+                    {% endfor %}
+                    <li {% if data.page >= data.pages %} class="disabled" {% endif %}>
+                        <a href="/?category={{data.category}}&page={{data.page + 1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
