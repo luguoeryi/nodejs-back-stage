@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="thumbnail">
+        <div class="caption">
+            <h1 class="text-center">{{data.content.title}}</h1>
+            <p class="text-center">作者： <a href="#">{{data.content.user.userName}}</a> - 时间： <a href="#">{{data.content.addTime | date('Y-m-d H:m:s', -8 * 60)}}</a> - 阅读 <a href="#">{{data.content.views}}</a></p>
+            <div class="des-content">{{data.content.content}}</div>
+        </div>
+    </div>
+{% endblock %}

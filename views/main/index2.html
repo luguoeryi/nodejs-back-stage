@@ -1,146 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>我的博客</title>
-     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+{% extends 'layout.html' %}
 
-    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <link rel="stylesheet" href="../../public/css/main.css" />
-
-    <script src="../../public/js/main.js"></script>
-</head>
-<body>
-    <section>
-        <section class="banner"></section>
-    </section>
-
-    <nav class="collapse navbar-collapse nav-style">
-        <ul class="nav navbar-nav nav-tabs">
-            <li {% if !data.category %} class="active" {% endif %}><a href="/">首页</a></li>
-            {% for item in data.categories %}
-            <li {% if data.category == item.id %} class="active" {% endif %}><a href="/?category={{item.id}}">{{item.name}}</a></li>
-            {% endfor %}
-        </ul>
-    </nav>
-
-    <article class="container article-content">
-        <div class="row">
-            <div class="col-md-8">
-                {% for item in data.contents %}
-                <div class="thumbnail">
-                    <div class="caption">
-                        <h1>{{item.title}}</h1>
-                        <p>作者： <a href="#">{{item.user.userName}}</a> - 时间： <a href="#">{{item.addTime | date('Y-m-d H:m:s', -8 * 60)}}</a> - 阅读 <a href="@">{{item.views}}</a></p>
-                        <div class="des-content">{{item.content}}</div>
-                        <p class="caption-footer">
-                            <button type="button" class="btn btn-info">阅读全文</button>
-                        </p>    
-                    </div>
-                </div>
+{% block content %}
+    {% for item in data.contents %}
+        <div class="thumbnail">
+            <div class="caption">
+                <h1>{{item.title}}</h1>
+                <p>作者： <a href="#">{{item.user.userName}}</a> - 时间： <a href="#">{{item.addTime | date('Y-m-d H:m:s', -8 * 60)}}</a> - 阅读 <a href="@">{{item.views}}</a></p>
+                <div class="des-content">{{item.content}}</div>
+                <p class="caption-footer">
+                    <a href="/view?contentId={{item.id}}" class="btn btn-info">阅读全文</a>
+                </p>    
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block pager %}
+    <div class="row">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li {% if data.page <= 1 %} class="disabled" {% endif %}>
+                    <a href="/?category={{data.category}}&page={{data.page - 1}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% set allPages = [] %}
+                {% set allPages.length = data.pages %}
+                {% for item, val in allPages %}
+                    <li {% if loop.index == data.page %} class="active" {%  endif %}><a href="/?category={{data.category}}&page={{loop.index}}">{{loop.index}}</a></li>
                 {% endfor %}
-            </div>
-            <div class="col-md-4">
-                <div class="thumbnail">
-                    <div class="caption">
-                        {% if data.userInfo._id %}
-                            <div class="state-box">
-                                <div class="state-box-title">
-                                    <span>用户信息</span>
-                                </div>
-                                <div class="state-box-content">
-                                    <h5>{{data.userInfo.userName}}</h5>
-                                    {% if data.userInfo.isAdmin %}
-                                        <div>你好，管理员！ <a target="_blank" href="/admin">进入管理</a></div><br /> 
-                                    {% else %}
-                                        <div>你好，欢迎光临我的博客！</div><br />
-                                    {% endif %}
-                                    <p><a id="logout" href="javascript:;">退出</a></p>
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="state-box form-wrap-login">
-                                <div class="state-box-title">
-                                    <span>用户登录</span>
-                                </div>
-                                <div class="state-box-content">
-                                    <div class="input-group item-input">
-                                        <input type="text" name="username" class="form-control" placeholder="用户名">
-                                    </div>
-
-                                    <div class="input-group item-input">
-                                        <input type="password" name="password" class="form-control" placeholder="密码">
-                                    </div>
-
-                                    <label class="info-status"></label>
-
-                                    <div class="input-group">
-                                        <button type="button" id="btn-login" class="btn btn-info">登录</button><br /><br />
-                                        <a href="javascript:;" id="showRegBtn">还没账号？ 点击注册</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="state-box form-wrap-reg hide-box">
-                                <div class="state-box-title">
-                                    <span>用户注册</span>
-                                </div>
-                                <div class="state-box-content">
-                                    <div class="input-group item-input">
-                                        <input type="text" name="username" class="form-control" placeholder="用户名">
-                                    </div>
-
-                                    <div class="input-group item-input">
-                                        <input type="password" name="password" class="form-control" placeholder="密码">
-                                    </div>
-
-                                    <div class="input-group item-input">
-                                        <input type="password" name="repassword" class="form-control" placeholder="确认密码">
-                                    </div>
-
-                                    <label class="info-status"></label>
-
-                                    <div class="input-group">
-                                        <button type="button" id="btn-reg" class="btn btn-info">注册</button><br /><br />
-                                        <a href="javascript:;" id="showLoginBtn">已有账号？点击登录</a>
-                                    </div>
-                                </div>
-                            </div> 
-                        {% endif %}
-                    </div>
-                </div>      
-            </div>
-        </div>
-        <div class="row">
-            <nav aria-label="...">
-                <ul class="pagination">
-                    <li {% if data.page <= 1 %} class="disabled" {% endif %}>
-                        <a href="/?category={{data.category}}&page={{data.page - 1}}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% set allPages = [] %}
-                    {% set allPages.length = data.pages %}
-                    {% for item, val in allPages %}
-                        <li {% if loop.index == data.page %} class="active" {%  endif %}><a href="/?category={{data.category}}&page={{loop.index}}">{{loop.index}}</a></li>
-                    {% endfor %}
-                    <li {% if data.page >= data.pages %} class="disabled" {% endif %}>
-                        <a href="/?category={{data.category}}&page={{data.page + 1}}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </article>
-</body>
-</html>
+                <li {% if data.page >= data.pages %} class="disabled" {% endif %}>
+                    <a href="/?category={{data.category}}&page={{data.page + 1}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

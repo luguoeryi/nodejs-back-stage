@@ -6,22 +6,33 @@ let router = express.Router();
 let Category = require('../models/Category');
 let Content = require('../models/Content');
 
+let data = {};
+
+router.use(function (req, res, next) {
+    data = {
+        userInfo: req.userInfo,
+        categories: []
+    };
+    Category.find().then(function (categories) {
+        data.categories = categories;
+        next();
+    });
+});
+
 /**
  * 首页
 */
 router.get('/', function (req, res, next) {
     let page = req.query.page || 1
     let category = req.query.category || ''
-    let data = {
-        userInfo: req.userInfo,
-        categories: [],
-        contents: [],
-        category: category,
-        count: 0,
-        page: page,
-        limit: 1,
-        pages: 0
-    };
+
+    data.category = category;
+    data.contents = [];
+    data.count = 0;
+    data.page = page;
+    data.limit = 2;
+    data.pages = 0;
+
 
     let where = {};
 
@@ -30,13 +41,7 @@ router.get('/', function (req, res, next) {
     }
     
     // 读取所有的分类信息
-    Category.find().then(function (categories) {
-
-        data.categories = categories;
-
-        return Content.where(where).count();
-
-    }).then(function (count) {
+    Content.where(where).count().then(function (count) {
 
         data.count = count;
 
@@ -56,6 +61,23 @@ router.get('/', function (req, res, next) {
         data.contents = contents;
         console.log(data);
         res.render('main/index2', {
+            data: data
+        });
+    });
+});
+
+/**
+ * 内同页面
+*/
+router.get('/view', function (req, res, next) {
+    let contentId = req.query.contentId || '';
+    Content.findOne({
+        _id: contentId
+    }).populate(['user']).then(function (content) {
+        data.content = content;
+        content.views++;
+        content.save();
+        res.render('main/view', {
             data: data
         });
     });
