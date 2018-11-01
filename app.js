@@ -15,8 +15,13 @@ let mongoose = require('mongoose');
 // 加载body-parser, 用来处理post提交过来的数据
 let bodyParser = require('body-parser');
 
+// 加载cookies模块
+let Cookies = require('cookies');
+
 // 创建app应用
 let app = express();
+
+let User = require('./models/User');
 
 /**
 * 设置静态资源托管
@@ -53,6 +58,29 @@ swig.setDefaults({cache: false});
 // bodyParser 设置
 app.use(bodyParser.urlencoded({extended: true}));
 
+// 设置cookie
+app.use(function (req, res, next) {
+    req.cookies = new Cookies(req, res);
+
+    // 解析用户登录的cookie信息
+    let cookiesInfo = req.cookies.get('userInfo');
+    if (cookiesInfo) {
+        try {
+            req.userInfo = JSON.parse(cookiesInfo) || {};
+            User.findById(req.userInfo._id).then(userInfo => {
+                userInfo = userInfo || {};
+                req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
+                next();
+            });
+        } catch (e) {
+            next();
+        };
+    } else {
+        next();
+    }
+
+});
+
 /**
 * 根据不同功能划分模块
 */
@@ -65,9 +93,7 @@ mongoose.connect('mongodb://localhost:27018/blog', function (err) {
     if (err) {
         console.log('数据路连接失败');
     } else {
-        console.log('数据路连接成功');
-
-        
+        console.log('数据路连接成功');        
         app.listen(9091);
     }
 });

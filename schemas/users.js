@@ -14,5 +14,10 @@ module.exports = new mongoose.Schema({
     // 用户名
     userName: String,
     // 密码
-    passWord: String
+    passWord: String,
+    // 是否为管理员
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
 });

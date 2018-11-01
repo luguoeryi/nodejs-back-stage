@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% for item in data.contents %}
+        <div class="thumbnail">
+            <div class="caption">
+                <h1>{{item.title}}</h1>
+                <p>作者： <a href="#">{{item.user.userName}}</a> - 时间： <a href="#">{{item.addTime | date('Y-m-d H:m:s', -8 * 60)}}</a> - 阅读 <a href="@">{{item.views}}</a></p>
+                <div class="des-content">{{item.content}}</div>
+                <p class="caption-footer">
+                    <a href="/view?contentId={{item.id}}" class="btn btn-info">阅读全文</a>
+                </p>    
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block pager %}
+    <div class="row">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li {% if data.page <= 1 %} class="disabled" {% endif %}>
+                    <a href="/?category={{data.category}}&page={{data.page - 1}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% set allPages = [] %}
+                {% set allPages.length = data.pages %}
+                {% for item, val in allPages %}
+                    <li {% if loop.index == data.page %} class="active" {%  endif %}><a href="/?category={{data.category}}&page={{loop.index}}">{{loop.index}}</a></li>
+                {% endfor %}
+                <li {% if data.page >= data.pages %} class="disabled" {% endif %}>
+                    <a href="/?category={{data.category}}&page={{data.page + 1}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

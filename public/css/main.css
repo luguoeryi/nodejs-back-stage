@@ -1,0 +1,53 @@
+body {
+    background: #ececec;
+}
+
+.hide-box {
+    display: none;
+}
+
+.banner {
+    height: 280px;
+    background: url("../img/banner.jpg") no-repeat center;
+}
+
+.article-content {
+    padding-top: 20px;
+}
+
+.nav-style {
+    background: #fff;
+    text-align: center;
+    line-height: 0;
+}
+.nav-style .navbar-nav {
+    display: inline-block;
+    float: none;
+}
+
+.item-input {
+    margin-top: 20px;
+}
+
+.des-content {
+    font-size: 16px;
+}
+
+.caption-footer {
+    margin-top: 15px;
+}
+
+.state-box-title span {
+    border-bottom: 2px solid #38B1D5;
+    padding: 4px;
+    padding-left: 0;
+}
+
+.state-box-content h5 {
+    margin-top: 20px;
+}
+
+.info-status {
+    color: red;
+    margin-top: 6px;
+}

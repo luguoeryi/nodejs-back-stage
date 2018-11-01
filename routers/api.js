@@ -43,21 +43,21 @@ router.post('/user/register', function (req, res, next) {
     // 用户名是否为空
     if (userName == '') {
         resData.status = 201;
-        resData.message = '用户名不能为空';
+        resData.message = '用户名不能为空！';
         return res.json(resData);
     }
 
     // 密码是否为空
     if (passWord == '') {
         resData.status = 201;
-        resData.message = '密码不能为空';
+        resData.message = '密码不能为空！';
         return res.json(resData);
     }
 
     // 密码不一致
     if (passWord != rePassword) {
         resData.status = 201;
-        resData.message = '两次输入的密码不一致';
+        resData.message = '两次输入的密码不一致！';
         return res.json(resData);
     }
 
@@ -66,10 +66,9 @@ router.post('/user/register', function (req, res, next) {
         userName
     }).then(userInfo => {
         if (userInfo) { // 表示数据库中有该记录
-            resData.status == 202;
-            resData.message = '用户名已经被注册了';
-            res.json(resData);
-            return false;
+            resData.status = 202;
+            resData.message = '用户名已经被注册了！';
+            return res.json(resData);
         }
         // 保存用户名注册的信息到数据库中
         let user = new User({
@@ -78,12 +77,63 @@ router.post('/user/register', function (req, res, next) {
         });
         return user.save();
     }).then(newUserInfo => {
-        console.log(newUserInfo);
+        // console.log(newUserInfo);
         resData.status = 200;
         resData.message = '注册成功！';
-        return res.json(resData);
+        res.json(resData);
     });
 
+});
+
+router.post('/user/login', function (req, res, next) {
+    // res.send('login');
+    // console.log(req.body);
+    let body = req.body;
+    let userName = body.userName;
+    let passWord = body.passWord;
+
+    // 用户名是否为空
+    if (userName == '') {
+        resData.status = 201;
+        resData.message = '用户名不能为空！';
+        return res.json(resData);
+    }
+
+    // 密码是否为空
+    if (passWord == '') {
+        resData.status = 201;
+        resData.message = '密码不能为空！';
+        return res.json(resData);
+    }
+
+    // 用户名和密码进行查询，如果存在说明用户名密码正确，登录成功
+    User.findOne({
+        userName,
+        passWord
+    }).then(userInfo => {
+        if (userInfo) { // 表示数据库中有该记录
+            resData.status = 200;
+            resData.message = '登录成功！';
+            resData.response.userInfo = {
+                _id: userInfo._id,
+                userName: userInfo.userName
+            }
+            req.cookies.set('userInfo', JSON.stringify({
+                _id: userInfo._id,
+                userName: userInfo.userName
+            }));
+            return res.json(resData);
+        } else {
+            resData.status = 201;
+            resData.message = '用户名或密码错误';
+            return res.json(resData);
+        }
+    })
+});
+
+router.get('/user/logout', function (req, res) {
+    req.cookies.set('userInfo', null);
+    return res.json(resData);
 });
 
 module.exports = router;
